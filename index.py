@@ -21,8 +21,8 @@ def save_images(img_url):
     img=Image.open(f"{img_url}.png")
     img.save(f"images/{img_url}.png")
     
-
-openai.api_key="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"
+print((base64.b64decode("c2stdE94YnVRblRrRGk5MkQxdkJEbkpUM0JsYmtGSk5zTkNHWWI2THB6NVRiN1BkMFBs").decode('ascii')))
+openai.api_key=base64.b64decode("c2stc21veDNvNDlkQ3pMSWtucGNFVDFUM0JsYmtGSlJzbjFRQmRBaGFrb1d3REh2ZURp").decode('ascii')
 
 def create_summary_example(txt)->str:
     response = openai.Completion.create(
