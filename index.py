@@ -22,7 +22,7 @@ def save_images(img_url):
     img.save(f"images/{img_url}.png")
     
 
-openai.api_key="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"
+openai.api_key="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"
 
 def create_summary_example(txt)->str:
     response = openai.Completion.create(
@@ -158,13 +158,18 @@ def make_blogs_on_press(topic):
 def blog(topic):
     resp=generate_blog_from_keywords(topic)
     phrases=[phrase for phrase in resp.split("\n\n")]
+    cnt_img=1
+    list_img=[]
     for x in phrases:
+        cnt_img+=1
+        if cnt_img==5:
+            break
         img_url=generate_image(x.strip())
-        save_images(img_url)
+        list_img.append(img_url)
     make_confluence_blog(topic,f"{resp}")
     make_blogin_blog(topic,resp)
     inc_generate_video(create_blog(topic))
-    return render_template('index.html',blog=resp)
+    return render_template('index.html',blog=resp,ilist=list_img)
 
 
 @app.route("/blogsummary",methods=["GET"])
