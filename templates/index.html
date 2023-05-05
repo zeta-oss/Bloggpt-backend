@@ -16,9 +16,9 @@
 <body>
     <fieldset>
         <legend>Blog </legend>
-        <pre id="blog">
-            {{ blog }}
-        </pre>
+        <div class="panel text-success" id="blog">
+            {{ blog|safe }}
+        </div>
         <script>
             var jsonpCallback=function(data)
     {

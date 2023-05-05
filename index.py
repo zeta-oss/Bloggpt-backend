@@ -7,6 +7,7 @@ from moviepy.editor import *
 import collections
 import collections.abc
 import json,re,os
+import base64
 import pptx,re
 from PIL import Image
 import urllib.request
@@ -166,10 +167,22 @@ def blog(topic):
             break
         img_url=generate_image(x.strip())
         list_img.append(img_url)
-    make_confluence_blog(topic,f"{resp}")
-    make_blogin_blog(topic,resp)
-    inc_generate_video(create_blog(topic))
-    return render_template('index.html',blog=resp,ilist=list_img)
+    reslt=""
+    i=0
+    resp1=""
+    cnt=0
+    for x in phrases:
+        resp1+=f"  |> Continuing with Point {str(cnt)}, {x}"
+    for phrase in phrases:
+        if i<len(list_img):
+            reslt+=phrase+f"<br/><img src='{list_img[i]}' style='width:200px;height:200px;'/><br/>"
+        else:
+            reslt+=phrase
+        i+=1
+    make_confluence_blog(topic,f"{resp1}")
+    make_blogin_blog(topic,reslt)
+   # inc_generate_video(create_blog(topic))
+    return render_template('index.html',blog=f"<p>{reslt}</p>",ilist=list_img)
 
 
 @app.route("/blogsummary",methods=["GET"])
