@@ -23,7 +23,7 @@ def save_images(img_url):
     img.save(f"images/{img_url}.png")
     
 print((base64.b64decode("c2stdE94YnVRblRrRGk5MkQxdkJEbkpUM0JsYmtGSk5zTkNHWWI2THB6NVRiN1BkMFBs").decode('ascii')))
-openai.api_key=base64.b64decode("c2stc21veDNvNDlkQ3pMSWtucGNFVDFUM0JsYmtGSlJzbjFRQmRBaGFrb1d3REh2ZURp").decode('ascii')
+openai.api_key="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"
 
 def create_summary_example(txt)->str:
     response = openai.Completion.create(
@@ -190,6 +190,7 @@ def blogsummary():
     topic=request.args.get("topic")
     print(topic)
     make_ppt("preeti",topic)
+    inc_generate_video(create_blog(topic))
     return render_template('summary.html',blog=create_summary(topic))
     
 def make_chat(username,topic):
@@ -272,7 +273,7 @@ def create_summary_for_ppt_text(txt):
         model="text-davinci-003",
         prompt=f"As a computer engineer or data scientist, give a very brief summary on {txt}",
         temperature=1.0,
-        max_tokens=12,
+        max_tokens=40,
         top_p=1.0,
         frequency_penalty=0.6,
         presence_penalty=0.6
@@ -292,13 +293,7 @@ def generate_ppt(story,topic):
             print(":")
             print(content)
             split_content=content.split(".")
-            plain_text=""
-            cnt=1
-            for x in split_content:
-                if(len(x)<=12):
-                    plain_text+=f"{cnt}. {x}"
-                else:
-                    plain_text+=f"{cnt}. {create_summary_for_ppt_text(x)}"
+            plain_text=content
                 
             if(slide_title!="" and content!=""):
                 bullet_slide_layout = prs.slide_layouts[8]
@@ -307,15 +302,8 @@ def generate_ppt(story,topic):
                 body2 = slide2.shapes.placeholders[1]
                 title2.text = slide_title
                 tf = body2.text_frame
-                p = tf.add_paragraph()
-                img_url=""
-                if(line.count("Image")!=0 or re.search(line,".jpeg") or re.search(line,".jpg") or re.search(line,".png")):
-                    img_url=generate_image(line)
-                if(img_url!=""):
-                    slide2.shapes.add_picture(img_url,pptx.util.Inches(0.5), pptx.util.Inches(1.75),width=pptx.util.Inches(9), height=pptx.util.Inches(5))
-                p.text = content
-                p.level = 1
-                
+                p=tf.add_paragraph()
+                p.text=plain_text                
             content=""
             slide_title=line
         else:
@@ -343,7 +331,7 @@ def inc_generate_video(blog):
 
 def generate_image(topic):
     response = openai.Image.create(
-        prompt=f"Generate an image on explaining the topic: {topic.strip()}",
+        prompt=f"Generate an image on explaining the topic: {topic.strip()} in English language",
         n=1,
         size="1024x1024"
     )
@@ -415,7 +403,9 @@ def make_ppt(user,topic):
         frequency_penalty=0.7,
         presence_penalty=0.7
     )
+    print("PPT tarted")
     generate_ppt(response["choices"][0]["text"],topic)
+    print("PPT generated")
     return response["choices"][0]["text"]
    
 
