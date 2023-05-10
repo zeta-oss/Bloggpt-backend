@@ -23,7 +23,7 @@ def save_images(img_url):
     img.save(f"images/{img_url}.png")
     
 print((base64.b64decode("c2stdE94YnVRblRrRGk5MkQxdkJEbkpUM0JsYmtGSk5zTkNHWWI2THB6NVRiN1BkMFBs").decode('ascii')))
-openai.api_key="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"
+openai.api_key="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"
 
 def create_summary_example(txt)->str:
     response = openai.Completion.create(
@@ -37,11 +37,11 @@ def create_summary_example(txt)->str:
     )
     return response["choices"][0]["text"]
 
-def generate_blog_from_keywords(keywords)->str: 
+def generate_blog_from_keywords(keywords,reaction="")->str: 
     example=create_summary_example("and ".join([x for x in keywords.split(",")])) 
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f"Write a company blog which should contain detailed study on keywords: {keywords} . Make separate paragraphs for better understanding. For example , you can write details about {example} .  Write the whole thing as an experienced software engineer or data scientist or technical blogger with minimum 12 years+ experience expected.",
+        prompt=f"Write a company blog which should contain detailed study on keywords: {keywords} . Make separate paragraphs for better understanding. For example , you can write details about {example} .  Write the whole thing as an experienced software engineer or data scientist or an experienced blogger with minimum 12 years+ experience expected. Keep in mind you have to focus on the points: {reaction} and improve the blog.",
         temperature=1,
         max_tokens=3630,   
         top_p=1,
@@ -53,7 +53,7 @@ def generate_blog_from_keywords(keywords)->str:
 def create_summary(blog)->str:
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f"As a tech blogger, Give an idea on the topic {blog}",
+        prompt=f"As an experienced blogger, Give an idea on the topic {blog}",
         temperature=1.0,
         max_tokens=600,
         top_p=1.0,
@@ -155,9 +155,14 @@ def make_blogs_on_press(topic):
     make_confluence_blog(topic,f"{resp}")
     make_blogin_blog(topic,resp)   
 
+@app.route("/loading",methods=["GET"])
+def loading():
+    return render_template("loading.html")
+
 @app.route("/blog/<topic>",methods=["GET"])
 def blog(topic):
-    resp=generate_blog_from_keywords(topic)
+    reaction=request.args.get("reaction")
+    resp=generate_blog_from_keywords(topic,reaction)
     phrases=[phrase for phrase in resp.split("\n\n")]
     cnt_img=1
     list_img=[]
@@ -179,8 +184,8 @@ def blog(topic):
         else:
             reslt+=phrase
         i+=1
-    make_confluence_blog(topic,f"{resp1}")
-    make_blogin_blog(topic,reslt)
+    make_confluence_blog(topic[:15],f"{resp1}")
+    make_blogin_blog(topic[:15],reslt)
    # inc_generate_video(create_blog(topic))
     return render_template('index.html',blog=f"<p>{reslt}</p>",ilist=list_img)
 
@@ -331,7 +336,7 @@ def inc_generate_video(blog):
 
 def generate_image(topic):
     response = openai.Image.create(
-        prompt=f"Generate an image on explaining the topic: {topic.strip()} in English language",
+        prompt=f"{topic.strip()} with text if there , in English or Hindi language",
         n=1,
         size="1024x1024"
     )
