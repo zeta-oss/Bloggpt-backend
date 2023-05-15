@@ -11,14 +11,29 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    
+</style>
+
 </head>
 
 <body>
     <fieldset>
         <legend>Blog </legend>
-        <div class="panel text-success" id="blog">
-            {{ blog|safe }}
+       
+        <div class="panel text-success" id="blog" style="font-family: 'Lucida Console', 'Courier New', monospace;">
+            {%for i in range(0,lenb)%}
+               <p class="m-4 p-4">{{ blog[i] }}</p>
+            {% endfor %}
+            <br/>
+            <nav class="navbar navbar-pills list-group">
+                {%for i in range(0,leni)%}
+                <li class="list-group-item left">{{ ilist[i]|safe }}</li>
+                {% endfor %}
+            </nav>
         </div>
+
         <script>
             var jsonpCallback=function(data)
     {
