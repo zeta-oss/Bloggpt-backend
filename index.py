@@ -22,8 +22,8 @@ def save_images(img_url):
     img=Image.open(f"{img_url}.png")
     img.save(f"images/{img_url}.png")
     
-print((base64.b64decode("c2stYjlZaDNiNmZBaWZIV3pkbWh5dTRUM0JsYmtGSlo2VXVZc1Vzb2hMWVlLdmJLOUJI").decode('ascii')))
-openai.api_key=base64.b64decode("c2stYjlZaDNiNmZBaWZIV3pkbWh5dTRUM0JsYmtGSlo2VXVZc1Vzb2hMWVlLdmJLOUJI").decode('ascii')
+print((base64.b64decode("c2stdFlZUno0eXpWamJoR3ZnMm93dURUM0JsYmtGSlNsY3VvTXV4dEhtaTJHVlJSV0Y5").decode('ascii')))
+openai.api_key=base64.b64decode("c2stdFlZUno0eXpWamJoR3ZnMm93dURUM0JsYmtGSlNsY3VvTXV4dEhtaTJHVlJSV0Y5").decode('ascii')
 
 
 def correct_sent(sent):
