@@ -22,8 +22,9 @@ def save_images(img_url):
     img=Image.open(f"{img_url}.png")
     img.save(f"images/{img_url}.png")
     
-print((base64.b64decode("c2stMHhHZmJPenVvQ1N1aTFmbnZXVnhUM0JsYmtGSmVwZm9WSFVzNTVFRkdOQU9xbUcz").decode('ascii')))
 openai.api_key=base64.b64decode("c2stMHhHZmJPenVvQ1N1aTFmbnZXVnhUM0JsYmtGSmVwZm9WSFVzNTVFRkdOQU9xbUcz").decode('ascii')
+
+
 
 
 def correct_sent(sent):
