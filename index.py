@@ -22,8 +22,8 @@ def save_images(img_url):
     img=Image.open(f"{img_url}.png")
     img.save(f"images/{img_url}.png")
     
-print((base64.b64decode("c2stZnd5ZEpNdXRIN0FVUnFEVkJ2UTlUM0JsYmtGSjloZjgxM2d1cWlaMXc2THRmNEtk").decode('ascii')))
-openai.api_key=base64.b64decode("c2stZnd5ZEpNdXRIN0FVUnFEVkJ2UTlUM0JsYmtGSjloZjgxM2d1cWlaMXc2THRmNEtk").decode('ascii')
+print((base64.b64decode("c2stM0lWZHI2QUV1VE5DMHhhVVRrRHBUM0JsYmtGSjZQOFFrTGJRZTlKOGh4NVBNdUhT").decode('ascii')))
+openai.api_key=base64.b64decode("c2stM0lWZHI2QUV1VE5DMHhhVVRrRHBUM0JsYmtGSjZQOFFrTGJRZTlKOGh4NVBNdUhT").decode('ascii')
 
 
 def correct_sent(sent):
@@ -173,9 +173,11 @@ def make_blogs_on_press(topic):
 @app.route("/loading",methods=["GET"])
 def loading():
     return render_template("loading.html")
+import time 
 
 @app.route("/blog/<topic>",methods=["GET"])
 def blog(topic):
+    t1=time.time()
     reaction=request.args.get("reaction")
     confl=request.args.get("confl")
     blogin=request.args.get("blogin")
@@ -206,6 +208,8 @@ def blog(topic):
     make_confluence_blog(topic,f"{resp}")
     make_blogin_blog(topic,reslt)
     resplist=resp.split("\n\n")
+    t2=time.time()
+    print(f"Total runtiume is : {(t2-t1)/1000}")
     return render_template('index.html',blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg))
 
 
