@@ -22,7 +22,7 @@ def save_images(img_url):
     img=Image.open(f"{img_url}.png")
     img.save(f"images/{img_url}.png")
     
-openai.api_key=base64.b64decode("c2stMHhHZmJPenVvQ1N1aTFmbnZXVnhUM0JsYmtGSmVwZm9WSFVzNTVFRkdOQU9xbUcz").decode('ascii')
+openai.api_key=base64.b64decode("c2stRklBMXVOalc1cDUwZG9HT3BpZ2hUM0JsYmtGSmttNkFJRVBrVkF0RFdydHRUelY2").decode('ascii')
 
 
 
@@ -51,11 +51,24 @@ def create_summary_example(txt)->str:
     )
     return response["choices"][0]["text"]
 
-def generate_blog_from_keywords(keywords,reaction="")->str: 
+def detect_emotion(topic)->str:
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"Detect the emotion of the phrase : \"{topic}\".",
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    return response["choices"][0]["text"]
+
+
+def generate_blog_from_keywords(keywords,mlength,reaction="")->str: 
     example=create_summary_example("and ".join([x for x in keywords.split(",")])) 
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f"Write a blog or content in at least 3500 words which should contain detailed study on keywords: {keywords} . Make separate paragraphs for better understanding. For example , you can write details about {example} .  Keep in mind you have to focus on the points: {reaction} and improve the output. Start with some wishes or quotes.",
+        prompt=f"Write a blog or content in at least {mlength} words which should contain detailed study on keywords: {keywords} . Make separate paragraphs for better understanding. For example , you can write details about {example} .  Keep in mind you have to focus on the points: {reaction} and improve the output. Start with some wishes or quotes.",
         temperature=1,
         max_tokens=3899,   
         top_p=1,
@@ -72,6 +85,19 @@ def create_summary(blog)->str:
         prompt=f"As an experienced blogger, Give an idea on the topic {blog}",
         temperature=1.0,
         max_tokens=600,
+        top_p=1.0,
+        frequency_penalty=0.6,
+        presence_penalty=0.6
+    )
+    print(response)
+    return response["choices"][0]["text"]
+
+def create_summary_prompt(topic)->str:
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"Please summarize accuractely the text :  {topic}",
+        temperature=1.0,
+        max_tokens=120,
         top_p=1.0,
         frequency_penalty=0.6,
         presence_penalty=0.6
@@ -182,10 +208,15 @@ def blog(topic):
     reaction=request.args.get("reaction")
     confl=request.args.get("confl")
     blogin=request.args.get("blogin")
-    resp=generate_blog_from_keywords(topic,reaction)
+    lenw=request.args.get("mlength")
+    if len(topic)>120:
+        topic=create_summary_prompt(topic)
+    emotion=detect_emotion(topic)
+    resp=generate_blog_from_keywords(topic,lenw,reaction)
     phrases=[phrase for phrase in resp.split("\n\n")]
     cnt_img=1
     list_img=[]
+    summ=create_summary(resp)
     for x in phrases:
         cnt_img+=1
         if cnt_img==5:
@@ -211,7 +242,7 @@ def blog(topic):
     resplist=resp.split("\n\n")
     t2=time.time()
     print(f"Total runtiume is : {(t2-t1)/1000}")
-    return render_template('index.html',blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg))
+    return render_template('index.html',blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
 
 
 @app.route("/blogsummary",methods=["GET"])

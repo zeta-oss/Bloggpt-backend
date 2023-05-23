@@ -23,6 +23,11 @@
         <legend>Blog </legend>
        
         <div class="panel text-success" id="blog" style="font-family: 'Lucida Console', 'Courier New', monospace;">
+
+            <b class="text-danger">Assuming you are asking with an emotion of {{ emotion }} here I tried to write the following </b>
+            <br/>
+            <br/>
+
             {%for i in range(0,lenb)%}
                <p class="m-4 p-4">{{ blog[i] }}</p>
             {% endfor %}
@@ -35,6 +40,19 @@
         </div>
 
         <script>
+         
+            jQuery("#audio").on("click",()=>{
+                console.log("audio");
+                console.log({{ summary }});
+                let speech=new SpeechSynthesisUtterance();
+                speech.lang="en-US";
+                speech.text = {{ summary }};
+                speech.volume = 1;
+                speech.rate = 1;
+                speech.pitch = 1;
+                speechSynthesis.speak(speech);
+            });
+
             var jsonpCallback=function(data)
     {
         console.log(data);
