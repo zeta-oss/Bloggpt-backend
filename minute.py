@@ -78,7 +78,7 @@ class guddi_conn(object):
         payload={}
         headers = {
             'Accept': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mzk5OWNlMWU5NzcxYzhlYmI2ZGU0NDAiLCJjbGllbnRJZCI6IjQyZDlhYTQ2ZTFlYTI4NDQiLCJyb2xlcyI6WyJvcmdhbml6YXRpb24tbWlncmF0ZWQiXSwicmVmcmVzaFRva2VuSWQiOiI2NDZjOGE4MmFlNjkyYmZlNWM1ODU4NjUiLCJtaW5pbXVtQXBpVmVyc2lvbiI6OCwiaWF0IjoxNjg0ODM0OTQ2LCJleHAiOjE2ODQ4Mzg1NDYsImlzcyI6Ik1pbnV0LCBJbmMuIn0.5g3wLO_1Y6LXrE3saKhHDffaiZ_Pu6NiuKpsjajIW0M'
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mzk5OWNlMWU5NzcxYzhlYmI2ZGU0NDAiLCJjbGllbnRJZCI6IjQyZDlhYTQ2ZTFlYTI4NDQiLCJyb2xlcyI6WyJvcmdhbml6YXRpb24tbWlncmF0ZWQiXSwicmVmcmVzaFRva2VuSWQiOiI2NDZjOThiODUxYWVhOTI4NWNmYTVjYjEiLCJtaW5pbXVtQXBpVmVyc2lvbiI6OCwiaWF0IjoxNjg0ODM4NTg0LCJleHAiOjE2ODQ4NDIxODQsImlzcyI6Ik1pbnV0LCBJbmMuIn0.cL-RBe_p_9yjx4GUkbgohMxzrWnLz04ZpTYk_lVmH_g'
         }
         response = requests.request("GET", url, headers=headers, data=payload)
         ###print(response.text)
