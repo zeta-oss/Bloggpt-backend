@@ -174,7 +174,7 @@
           legend: {display: true}
         }
       });
-      fetch("http://127.0.0.1:8088/",{
+      fetch("/",{
         method: "POST"
       }).then(resp=>console.log(resp)).then(data=>{
         console.log(`data: ${data}`);
@@ -189,7 +189,7 @@
         if(t1=="-1" || !checktime(t1,t2)) {
           alert("Please provide the correct data for proper analytics.\nPlease note that Starting time should be <= Ending time and Starting time can not be blank.");
         } else {
-         (async()=>{await fetch(`http://127.0.0.1:8088/analysis?st=${t1}&et=${t2}`,{
+         (async()=>{await fetch(`/analysis?st=${t1}&et=${t2}`,{
           method: "GET"
          }).then(resp=>resp.json()).then(data=>{
           console.log(`analysis data : ${JSON.stringify(data)}`);
