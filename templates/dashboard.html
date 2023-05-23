@@ -1,0 +1,258 @@
+<head>
+    <style>
+        html, body {
+            color: #fff;
+              background: #000;
+              
+              
+          }
+          
+          /* ---- Timeline ---- */
+          .c{
+              background:Orange;
+          }
+          ol {
+              position: relative;
+            min-width:150%;
+              display: block;
+              margin: 100px auto;
+              height: 3px;
+              background: #ffF;
+              display:flex;
+              background:red;
+          }
+          
+          
+          
+          /* ---- Timeline elements ---- */
+          li {
+              position: relative;
+              display: inline-block;
+              float: left;
+              width: 150px;
+              font: bold 14px arial;
+            height: 50px;
+             
+          }
+          .vl {
+            position:absolute;
+            bottom:50px;
+            border-left: 2px solid #fff;
+            height: 90px;
+            left:45%;
+          }
+          li .diplome {
+            position: absolute;
+            bottom: 150px;
+            left: 36%;
+            color: green;
+            font-weight:bold;
+          }
+          li .point {
+              content: "";
+              bottom:140px;
+              left: 43%;
+              display: block;
+              width: 6px;
+              height: 6px;
+              border: 2px solid #fff;
+              border-radius: 10px;
+              background: transparent;
+            position: absolute;
+          }
+          li .description {
+            
+            
+            padding: 10px;
+            margin-top: 20px;
+            position: relative;
+            font-weight: normal;
+            z-index: 1;
+          }
+          
+          
+          /* ---- Hover effects ---- */
+          
+          
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <h1>Minut</h1><br>
+<div class="c" style="width:{{125*(lend-1)}}px;">
+<ol id="noise" >
+
+  
+    
+    {% for item in range(0,lend) %}
+
+
+
+
+    {% if data_d[item].value<=60.00 %}
+    <li>
+        <div class="vl" style="height:{{data_d[item].value}};"></div>
+        <p class="diplome">{{ "%0.2f" | format(data_d[item].value|float) }}</p>
+        <span class="point" style="bottom:{{ "%0.2f" | format(data_d[item].value|float) }};border:2px solid green;background-color:yellow;"></span>
+        <p class="description">
+          {{ data_d[item].datetime }}
+        </p>
+      </li>
+    {% else %}
+    <li>
+        <div class="vl" style="background-color:yellow;height:{{data_d[item].value}};"></div> 
+        <p class="diplome" style="color:red;">{{"%0.2f" | format(data_d[item].value|float)}}</p>
+        <span class="point" style="bottom:{{ "%0.2f" | format(data_d[item].value|float) }};border:2px solid red;background-color:red;"></span>
+        <p class="description">
+          {{ data_d[item].datetime }}
+        </p>
+      </li>
+    {% endif %}
+    {% endfor %}
+ 
+</ol>
+   </div>
+   <div style="position:fixed;width:100%;" >
+    <select class="form-group" style="border-radius:80px;width:250px;height:80px;" id="time1">
+      <option value="-1">---Select The Starting Time Stamp---</option>
+      {% for item in range(0,lend) %}
+      <option value="{{ data_d[item].datetime }}">{{ data_d[item].datetime }}</option>
+    {% endfor %}
+    </select>&nbsp;&nbsp;
+    <select class="form-group" style="border-radius:80px;width:250px;height:80px;" id="time2" onchange="detect()">
+      <option value="-1">---Select The Ending Time Stamp---</option>
+      {% for item in range(0,lend) %}
+      <option value="{{ data_d[item].datetime }}">{{ data_d[item].datetime }}</option>
+      {% endfor %}
+    </select>
+    <table style="width:100%;max-width:1200px;left:200px;max-height:350px;border:none;">
+      <tr>
+        <td>
+   <canvas id="myChart" style="max-width:800px;left:200px;"></canvas>
+        </td>
+        <td>
+          <div id="ndata" style="font-size:15px;font-weight:bold;color:red;display:block;"></div>
+
+        </td>
+      </tr>
+    </table>
+   &nbsp;
+   </div>
+   <script>
+
+    
+    const gdata=[];
+    console.log("hi");
+    let ctime=0;
+    {% for x in range(0,lend) %}
+       gdata.push([{{data_d[x].value}},ctime])
+       ctime+=5
+    {% endfor %}
+    let xvals=[];
+    let yvals=[];
+    for(var i=0;i<gdata.length;i++) {
+        xvals.push(gdata[i][1]);
+        yvals.push(gdata[i][0]);
+    }
+    console.log(xvals);
+    console.log(yvals);
+    new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: xvals,
+          datasets: [{ 
+            data: yvals,
+            borderColor: "yellow",
+            fill: false
+          }]
+        },
+        options: {
+          legend: {display: true}
+        }
+      });
+      fetch("http://127.0.0.1:8088/",{
+        method: "POST"
+      }).then(resp=>console.log(resp)).then(data=>{
+        console.log(`data: ${data}`);
+        if(data=="done") {
+          $.notify("Notification sent", "info");
+        }
+      }).catch(err=>console.log(err));
+      
+      function detect() {
+        const t1=$("#time1").val();
+        const t2=$("#time2").val();
+        if(t1=="-1" || !checktime(t1,t2)) {
+          alert("Please provide the correct data for proper analytics.\nPlease note that Starting time should be <= Ending time and Starting time can not be blank.");
+        } else {
+         (async()=>{await fetch(`http://127.0.0.1:8088/analysis?st=${t1}&et=${t2}`,{
+          method: "GET"
+         }).then(resp=>resp.json()).then(data=>{
+          console.log(`analysis data : ${JSON.stringify(data)}`);
+        //  console.log(`analysis data : {data}`)
+         // const json_data=JSON.parse(data);
+         // console.log(`guddi....${json_data}`);
+          let xvals=data["datar"];
+          let mx_d=data["mxdata"];
+          let avg_d=data["meand"];
+          let med_d=data["med_data"]
+          document.querySelector("#ndata").innerHTML=`<table style="border:2px solid red;">
+            <thead style="color:white;border:2px solid red;">
+              <tr>
+              <th>Maximum decible</th>
+              <th>Average decible</th>
+              <th>Median data</th>
+              </tr>
+            </thead>
+            <tbody >
+              <tr>
+                <td style="border:2px solid red;">${mx_d}</td>
+                <td style="border:2px solid red;">${avg_d}</td>
+                <td style="border:2px solid red;">${med_d}</td> //kya hua
+              </tr>
+            </tbody>
+          </table>`;
+    let yvals=[];
+
+    for(var i=0,c=0;i<xvals.length;i++,c+=5) {
+        yvals.push(c);
+    }
+    console.log(xvals);
+    console.log(yvals);
+    new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: yvals,
+          datasets: [{ 
+            data: xvals,
+            borderColor: "yellow",
+            fill: false
+          }]
+        },
+        options: {
+          legend: {display: true}
+        }
+      });
+
+
+         }).catch(err=>console.log(err));})();
+        }
+      }
+      const checktime=(t1,t2)=>{
+        tt1=t1.split("T")[1];
+        tt2=t2.split("T")[1];
+        h1=tt1.split(":")[0];
+        h2=tt2.split(":")[0];
+        m1=tt1.split(":")[1];
+        m2=tt2.split(":")[1];
+        r1=h1*60+m1;
+        r2=h2*60+m2;
+        return r1<=r2;
+      };
+
+   </script>
+</body>

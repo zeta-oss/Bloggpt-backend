@@ -1,0 +1,13 @@
+version: '3'
+services:
+    flask-web: 
+      command: python3 minute.py
+      build: '.'
+      ports:
+        - '8088:8088'
+      depends_on: 
+        - redis
+    redis: 
+      image: redislabs/redismod:latest
+      ports:
+        - '6379:6379'
