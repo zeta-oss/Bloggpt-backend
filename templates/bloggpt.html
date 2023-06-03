@@ -1,0 +1,80 @@
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html {
+        width: 100%;
+        height: 100%;
+        background: -webkit-radial-gradient(rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.258824) 100%), linear-gradient(108deg, rgb(183, 28, 28) 0, rgb(26, 35, 126) 90%), rgba(0, 0, 0, 0);
+        background: -moz-radial-gradient(rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.258824) 100%), linear-gradient(108deg, rgb(183, 28, 28) 0, rgb(26, 35, 126) 90%), rgba(0, 0, 0, 0);
+        background: -o-radial-gradient(rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.258824) 100%), linear-gradient(108deg, rgb(183, 28, 28) 0, rgb(26, 35, 126) 90%), rgba(0, 0, 0, 0);
+        background: -ms-radial-gradient(rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.258824) 100%), linear-gradient(108deg, rgb(183, 28, 28) 0, rgb(26, 35, 126) 90%), rgba(0, 0, 0, 0);
+        background: radial-gradient(rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.258824) 100%), linear-gradient(108deg, rgb(183, 28, 28) 0, rgb(26, 35, 126) 90%), rgba(0, 0, 0, 0);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab', GradientType=1);
+      }
+      
+      body {
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB9JREFUeNpiZmBg6AZiDiBWZ4YyQMCOCcYA4kMAAQYAHyYCCUdxidgAAAAASUVORK5CYII=");
+      }
+
+#splash-screen-overlay {
+  width: 100vmax;
+  height: 100vmax;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 100%), rgb(0 0 0 / 100%));
+}
+
+#splash-screen-progress {
+  margin-bottom: .8em;
+  margin-top: .8em;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+    z-index: 102;
+}
+
+#splash-screen-overlay .ui.loader {
+    width: 75%;
+}
+
+.ui.progress>.label {
+    font-variant: all-petite-caps;
+    font-weight: bold;
+}
+
+.ui.inverted.progress.success>.label {
+    color: #ff851b;
+}
+
+.complete {
+    display: none;
+}
+</style>
+<div id="splash-screen-overlay" class="ui centered aligned inverted container">
+    <div class="ui active dimmer">
+        <div class="ui orange text loader content">
+            <span id="splash-screen-title" class="ui large inverted orange header text">
+                <strong>COD[E]DITOR</strong>
+            </span>
+            <div class="ui small orange inverted progress">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="label"></div>
+            </div>
+            <div id="splash-screen-progress" class="ui small inverted grey text">
+                ...
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
