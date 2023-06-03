@@ -24,8 +24,18 @@ def save_images(img_url):
     
 openai.api_key=base64.b64decode("c2stZ1pHNTVwVGhHSWgyQ1FrU1lwMmJUM0JsYmtGSmQxVzFOa3FWeUZ1cXQycXB1SlhR").decode('ascii')
 
-
-
+def generate_backlinks(prompt):
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"Suggest some good websites for {prompt}",
+        temperature=1,
+        max_tokens=272,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    
+    return response["choices"][0]["text"]
 
 def correct_sent(sent):
     response = openai.Completion.create(
@@ -206,12 +216,16 @@ import time
 def blog(topic):
     t1=time.time()
     reaction=request.args.get("reaction")
+    seo=request.args.get("seo")
     confl=request.args.get("confl")
     blogin=request.args.get("blogin")
     lenw=request.args.get("mlength")
     if len(topic)>120:
         topic=create_summary_prompt(topic)
     emotion=detect_emotion(topic)
+    seores=""
+    if seo=="Yes":
+        seores=generate_backlinks(topic)
     resp=generate_blog_from_keywords(topic,lenw,reaction)
     phrases=[phrase for phrase in resp.split("\n\n")]
     cnt_img=1
@@ -242,7 +256,9 @@ def blog(topic):
     resplist=resp.split("\n\n")
     t2=time.time()
     print(f"Total runtiume is : {(t2-t1)/1000}")
-    return render_template('index.html',blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
+    if(seo.lower()=="yes"):
+        return render_template('index.html',seo=seores.split("\n"),lseo=len(seores),blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
+    return render_template('index.html',seo=[],lseo=0,blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
 
 
 @app.route("/blogsummary",methods=["GET"])

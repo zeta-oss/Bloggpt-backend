@@ -27,7 +27,14 @@
             <b class="text-danger">Assuming you are asking with an emotion of {{ emotion }} here I tried to write the following </b>
             <br/>
             <br/>
-
+            {% if  %}
+            <h2>Backlinks for SEO Website Authority Over Time  : </h2>
+            {% endif %}
+            <ol>
+            {%for i in range(0,lseo)%}
+               <li>lseo[i]</li>
+            {% endfor %}
+            </ol>
             {%for i in range(0,lenb)%}
                <p class="m-4 p-4">{{ blog[i] }}</p>
             {% endfor %}
