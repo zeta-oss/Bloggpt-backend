@@ -257,7 +257,7 @@ def blog(topic):
     t2=time.time()
     print(f"Total runtiume is : {(t2-t1)/1000}")
     if(seo.lower()=="yes"):
-        return render_template('index.html',seo=seores.split("\n"),lseo=len(seores),blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
+        return render_template('index.html',seo=seores.split("\n"),lseo=min(5,len(seores)),blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
     return render_template('index.html',seo=[],lseo=0,blog=resplist,ilist=liimg,lenb=len(resplist),leni=len(liimg),summary=summ,emotion=emotion)
 
 
